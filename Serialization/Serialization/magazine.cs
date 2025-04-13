@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
-namespace JournalTask3
+namespace JournalTask4
 {
     public class Article
     {
@@ -35,50 +35,64 @@ namespace JournalTask3
     {
         static void Main(string[] args)
         {
-            Journal journal = new Journal();
+            List<Journal> journals = new List<Journal>();
 
-            Console.Write("Назва журналу: ");
-            journal.Title = Console.ReadLine();
+            Console.Write("Скільки журналів додати? ");
+            int journalCount = int.Parse(Console.ReadLine());
 
-            Console.Write("Видавництво: ");
-            journal.Publisher = Console.ReadLine();
-
-            Console.Write("Дата випуску: ");
-            journal.ReleaseDate = DateTime.Parse(Console.ReadLine());
-
-            Console.Write("Кількість сторінок: ");
-            journal.PageCount = int.Parse(Console.ReadLine());
-
-            Console.Write("Скільки статей додати? ");
-            int count = int.Parse(Console.ReadLine());
-
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < journalCount; i++)
             {
-                Console.WriteLine($"Стаття {i + 1}:");
-                Article article = new Article();
+                Console.WriteLine($"\nЖУРНАЛ {i + 1}");
+                Journal journal = new Journal();
 
-                Console.Write("  Назва: ");
-                article.Title = Console.ReadLine();
+                Console.Write("Назва журналу: ");
+                journal.Title = Console.ReadLine();
 
-                Console.Write("  Кількість символів: ");
-                article.SymbolCount = int.Parse(Console.ReadLine());
+                Console.Write("Видавництво: ");
+                journal.Publisher = Console.ReadLine();
 
-                Console.Write("  Анонс: ");
-                article.Preview = Console.ReadLine();
+                Console.Write("Дата випуску: ");
+                journal.ReleaseDate = DateTime.Parse(Console.ReadLine());
 
-                journal.Articles.Add(article);
+                Console.Write("Кількість сторінок: ");
+                journal.PageCount = int.Parse(Console.ReadLine());
+
+                Console.Write("Скільки статей? ");
+                int articleCount = int.Parse(Console.ReadLine());
+
+                for (int j = 0; j < articleCount; j++)
+                {
+                    Console.WriteLine($"  Стаття {j + 1}:");
+                    Article article = new Article();
+
+                    Console.Write("    Назва: ");
+                    article.Title = Console.ReadLine();
+
+                    Console.Write("    Кількість символів: ");
+                    article.SymbolCount = int.Parse(Console.ReadLine());
+
+                    Console.Write("    Анонс: ");
+                    article.Preview = Console.ReadLine();
+
+                    journal.Articles.Add(article);
+                }
+
+                journals.Add(journal);
             }
 
-            string json = JsonSerializer.Serialize(journal, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText("journal_with_articles.json", json);
-            Console.WriteLine("\nЗбережено в journal_with_articles.json");
+            string json = JsonSerializer.Serialize(journals, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText("journals_array.json", json);
+            Console.WriteLine("\nМасив журналів збережено у файл journals_array.json");
 
             // Десеріалізація
-            string loadedJson = File.ReadAllText("journal_with_articles.json");
-            Journal loaded = JsonSerializer.Deserialize<Journal>(loadedJson);
+            string loadedJson = File.ReadAllText("journals_array.json");
+            List<Journal> loadedJournals = JsonSerializer.Deserialize<List<Journal>>(loadedJson);
 
-            Console.WriteLine("\nЗавантажений журнал:");
-            Console.WriteLine(loaded);
+            Console.WriteLine("\nЗавантажені журнали:");
+            foreach (var j in loadedJournals)
+            {
+                Console.WriteLine("\n" + j);
+            }
 
             Console.ReadKey();
         }
